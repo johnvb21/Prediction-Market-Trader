@@ -37,8 +37,27 @@ All code must document the exact contract it satisfies. Identify the approved co
 
 Maintain architecture-to-component-to-operation-to-test-to-code traceability. Code without corresponding approved contracts is not ready for implementation or acceptance.
 
-## 5. Completion criteria
+## 5. Adversarial testing for integrated components
 
-A change is complete only when approved specifications, tests, implementation, and code documentation agree, every contract and invariant has verification coverage, and all required checks pass.
+Every newly integrated component, including third-party dependencies and venue adapters, must undergo adversarial testing at its actual integration boundary before acceptance. Changes to an existing integration must repeat and extend these tests for the affected behavior.
+
+Specify the adversarial test plan with the component contracts and obtain owner approval before implementation. Write adversarial tests and fuzz harnesses before production integration code, under the tests-first rule.
+
+Required coverage:
+- Fuzz interface inputs and serialized data, including malformed, truncated, oversized, unexpected, and boundary values. Use stateful or sequence fuzzing for stateful interfaces.
+- Assert approved contracts and invariants after accepted inputs, rejected inputs, and failures; verify no unauthorized side effects or corrupted state.
+- Inject applicable dependency faults: timeouts, disconnects, partial responses, stale data, duplicates, reordered messages, rate limits, and invalid upstream responses.
+- Exercise applicable concurrency, retry, cancellation, restart, and recovery behavior.
+- Check resource bounds and failure containment against explicit approved limits.
+
+Document applicability for each fault category; omissions require an explicit rationale and owner approval. Fuzz testing is mandatory for every new integration, not replaced by ordinary example tests.
+
+Make failures reproducible: record seeds, execution budgets, tool versions, and relevant configuration; minimize failing inputs and retain them as regression cases. Define a bounded CI fuzz run and a longer pre-acceptance campaign in the approved plan. Run against isolated environments and synthetic data, without live financial side effects.
+
+Acceptance requires recorded adversarial test results, completion of the approved fuzzing budgets, and no unresolved contract or invariant violations. A passing fuzz campaign is evidence, not proof of correctness.
+
+## 6. Completion criteria
+
+A change is complete only when approved specifications, tests, implementation, and code documentation agree, every contract and invariant has verification coverage, and all required checks, including the approved adversarial and fuzz testing campaigns, pass.
 
 Recording this repository policy is not approval of any product architecture, component specification, or implementation.
