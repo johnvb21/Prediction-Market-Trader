@@ -56,8 +56,18 @@ Make failures reproducible: record seeds, execution budgets, tool versions, and 
 
 Acceptance requires recorded adversarial test results, completion of the approved fuzzing budgets, and no unresolved contract or invariant violations. A passing fuzz campaign is evidence, not proof of correctness.
 
-## 6. Completion criteria
+## 6. Change logging and failure-mode tracking
 
-A change is complete only when approved specifications, tests, implementation, and code documentation agree, every contract and invariant has verification coverage, and all required checks, including the approved adversarial and fuzz testing campaigns, pass.
+Every edit must be recorded in `CHANGELOG.md`, including specifications, tests, code, configuration, dependencies, documentation, policy, and the log itself. Record edits during the work, not retrospectively at release time. Each entry must include a stable change ID, UTC timestamp, actor, reason, affected paths, before/after state, approval references, verification performed and its outcome, and related failure-mode IDs.
+
+Include the log update in the same commit as the edits it describes whenever possible. For multi-step work, record planned/in-progress state before edits and append outcomes, failures, reversions, and follow-up work as they occur. Preserve history: append corrections rather than silently rewriting prior entries. A single entry may describe its own log update; no recursive entry is needed. Never record secrets or private account/trading data.
+
+Maintain `docs/FAILURE_MODES.md` continuously from design through implementation, integration, testing, and operation. Record possible failures when discovered, before proceeding with affected work. Assign stable IDs and document affected components/contracts, trigger or cause, observable symptoms, impact, detection, prevention/mitigation, recovery, verification/test references, and status. Distinguish hypothetical risks from observed failures and verified mitigations; identify unknowns explicitly.
+
+Update the register when contracts change, tests expose a new failure, an incident occurs, or mitigation/recovery evidence changes. Link failure modes to contracts, adversarial tests, regression cases, and change-log entries. Unresolved failure behavior must be addressed in the specifications and approval process; documentation alone does not establish mitigation.
+
+## 7. Completion criteria
+
+A change is complete only when approved specifications, tests, implementation, and code documentation agree, every contract and invariant has verification coverage, the change log and failure-mode register reflect the change, and all required checks, including the approved adversarial and fuzz testing campaigns, pass.
 
 Recording this repository policy is not approval of any product architecture, component specification, or implementation.
